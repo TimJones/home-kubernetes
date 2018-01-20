@@ -1,7 +1,7 @@
 version: '2'
 services:
   matchbox:
-    image: quay.io/coreos/matchbox:v0.6.1
+    image: quay.io/coreos/matchbox:v0.7.0
     ports:
       - 8080:8080
       - 8081:8081
@@ -10,24 +10,10 @@ services:
       - -rpc-address=0.0.0.0:8081
       - -log-level=debug
     volumes:
-      - ./certs/:/etc/matchbox:Z,ro
-      - ./assets:/var/lib/matchbox/assets:Z,ro
-      - ./groups:/var/lib/matchbox/groups:Z
-      - ./ignition:/var/lib/matchbox/ignition:Z
-      - ./profiles:/var/lib/matchbox/profiles:Z
-  netboot:
-    image: quay.io/coreos/dnsmasq:v0.4.0
-    command:
-      - --no-daemon
-      - --interface=br_admin
-      - --dhcp-range=192.168.10.1,proxy,255.255.255.0
-      - --enable-tftp
-      - --tftp-root=/var/lib/tftpboot
-      - --dhcp-userclass=set:ipxe,iPXE
-      - --pxe-service=tag:#ipxe,x86PC,"PXE chainload to iPXE",undionly.kpxe
-      - --pxe-service=tag:ipxe,x86PC,"iPXE",http://host-01.admin.home.es.tnv:8080/boot.ipxe
-      - --log-queries
-      - --log-dhcp
-    network_mode: host
-    cap_add:
-      - NET_ADMIN
+      - ./certs:/etc/matchbox/:Z,ro
+      - ./assets:/var/lib/matchbox/assets/:Z,ro
+      - ./groups:/var/lib/matchbox/groups/:Z
+      - ./ignition:/var/lib/matchbox/ignition/:Z
+      - ./profiles:/var/lib/matchbox/profiles/:Z
+  # Move netboot to UniFi config
+  #   see: https://typhoon.psdn.io/topics/hardware/#ubiquiti
