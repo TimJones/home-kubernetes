@@ -25,12 +25,15 @@ module "cluster" {
   controller_domains = ["node-01.home.es.tnv"]
   worker_names = [
     "node-02",
+    "node-03",
   ]
   worker_macs = [
     "02:00:0d:84:1f:94",
+    "02:00:0d:84:1f:8e",
   ]
   worker_domains = [
     "node-02.home.es.tnv",
+    "node-03.home.es.tnv",
   ]
 
   # output assets dir
