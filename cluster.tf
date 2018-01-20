@@ -1,27 +1,47 @@
 // Self-hosted Kubernetes cluster
 module "cluster" {
-  source = "modules/bootkube"
+  source = "git::https://github.com/poseidon/typhoon//bare-metal/container-linux/kubernetes"
 
-  matchbox_http_endpoint = "${var.matchbox_http_endpoint}"
-  ssh_authorized_key     = "${var.ssh_authorized_key}"
+  providers = {
+    local = "local.default"
+    null = "null.default"
+    template = "template.default"
+    tls = "tls.default"
+  }
 
-  cluster_name            = "${var.cluster_name}"
-  container_linux_channel = "${var.container_linux_channel}"
-  container_linux_version = "${var.container_linux_version}"
+  # install
+  matchbox_http_endpoint  = "http://matchbox.home.es.tnv:8080"
+  container_linux_channel = "stable"
+  container_linux_version = "1576.5.0"
+  ssh_authorized_key      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2W59vf7yI42TbphjU5U2N6YMioz02n6TZlO5LKLEyt7Fdp12jY6tby22sg1w/x/fsQrbjkBTfT2MBqsGz2lVquVIABtno3FzBgOIXkkk47v7B9SjYF+G4caJyfsBCkV20Z9PVQNnvhEL/6NVAaJN44SvKvADUh/dusQDQ7xpcQ+E2EdIs2qrCZJoc/EM590MfDKFic+rQaWXqHqYOLs6wL3k8w9c32bht6t3aDgG6Y8HItt3b3TfCAETYmmDO2bivWBDPeTgsGL/AknFbuUcFE+FNVIboovMt9WWCsYeHXAg+uC4vIxOqGRA2buGsM8qdGsJEu5mnH5aZlIYuTx2n"
 
-  # Machines
-  controller_names   = "${var.controller_names}"
-  controller_macs    = "${var.controller_macs}"
-  controller_domains = "${var.controller_domains}"
-  worker_names       = "${var.worker_names}"
-  worker_macs        = "${var.worker_macs}"
-  worker_domains     = "${var.worker_domains}"
+  # cluster
+  cluster_name    = "home"
+  k8s_domain_name = "api.k8s.home.es.tnv"
 
-  # bootkube assets
-  k8s_domain_name               = "${var.k8s_domain_name}"
-  asset_dir                     = "${var.asset_dir}"
+  # machines
+  controller_names   = ["node-01"]
+  controller_macs    = ["02:00:0d:84:1f:93"]
+  controller_domains = ["node-01.home.es.tnv"]
+  worker_names = [
+    "node-02",
+  ]
+  worker_macs = [
+    "02:00:0d:84:1f:94",
+  ]
+  worker_domains = [
+    "node-02.home.es.tnv",
+  ]
 
-  # Optional
-  container_linux_oem           = "${var.container_linux_oem}"
-  experimental_self_hosted_etcd = "${var.experimental_self_hosted_etcd}"
+  # output assets dir
+  asset_dir = "./assets"
+
+  # optional
+  cached_install = false
+  pod_cidr = "192.168.192.0/18"
+  service_cidr = "192.168.32.0/20"
+  cluster_domain_suffix = "k8s.home.es.tnv"
+  kernel_args = [
+    "kvm-intel.nested=1",
+  ]
 }
