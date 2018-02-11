@@ -1,0 +1,13 @@
+{
+	"id": "simple",
+	"profile": "simple",
+	"selector": {
+		"os": "installed"
+	},
+	"metadata": {
+		"ssh_authorized_keys": [
+			"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2W59vf7yI42TbphjU5U2N6YMioz02n6TZlO5LKLEyt7Fdp12jY6tby22sg1w/x/fsQrbjkBTfT2MBqsGz2lVquVIABtno3FzBgOIXkkk47v7B9SjYF+G4caJyfsBCkV20Z9PVQNnvhEL/6NVAaJN44SvKvADUh/dusQDQ7xpcQ+E2EdIs2qrCZJoc/EM590MfDKFic+rQaWXqHqYOLs6wL3k8w9c32bht6t3aDgG6Y8HItt3b3TfCAETYmmDO2bivWBDPeTgsGL/AknFbuUcFE+FNVIboovMt9WWCsYeHXAg+uC4vIxOqGRA2buGsM8qdGsJEu5mnH5aZlIYuTx2n"
+		]
+	}
+}
+

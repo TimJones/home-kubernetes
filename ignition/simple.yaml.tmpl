@@ -1,0 +1,8 @@
+---
+passwd:
+  users:
+    - name: core
+      ssh_authorized_keys:
+{{- range  .ssh_authorized_keys }}
+        - {{ . }}
+{{- end }}

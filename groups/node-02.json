@@ -1,0 +1,8 @@
+{
+	"id": "node-02",
+	"profile": "container-linux-install",
+	"selector": {
+		"mac": "02:00:c6:3b:b2:bc"
+	},
+	"metadata": {}
+}

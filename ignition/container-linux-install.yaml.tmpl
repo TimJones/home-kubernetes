@@ -1,0 +1,30 @@
+---
+systemd:
+  units:
+    - name: installer.service
+      enable: true
+      contents: |
+        [Unit]
+        Requires=network-online.target
+        After=network-online.target
+        [Service]
+        Type=simple
+        ExecStart=/opt/installer
+        [Install]
+        WantedBy=multi-user.target
+storage:
+  files:
+    - path: /opt/installer
+      filesystem: root
+      mode: 0500
+      contents:
+        inline: |
+          #!/bin/bash -ex
+          curl --retry 10 "http://matchbox.home.es.tnv:8080/ignition?{{ .request.raw_query }}&os=installed" -o ignition.json
+          coreos-install \
+            -d {{ if index . "os_drive" }}{{ .os_drive }}{{ else }}/dev/sda{{ end }} \
+            -C stable \
+            -V current \
+            -i ignition.json
+          udevadm settle
+          systemctl reboot
