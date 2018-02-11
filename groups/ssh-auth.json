@@ -1,8 +1,8 @@
 {
-	"id": "simple",
-	"profile": "simple",
+	"id": "ssh-auth",
+	"profile": "ssh-auth",
 	"selector": {
-		"os": "installed"
+		"profile": "ssh-auth"
 	},
 	"metadata": {
 		"ssh_authorized_keys": [
@@ -10,4 +10,3 @@
 		]
 	}
 }
-

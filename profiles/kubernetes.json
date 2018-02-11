@@ -1,0 +1,18 @@
+{
+	"id": "kubernetes",
+	"ignition_id": "kubernetes.yaml.tmpl",
+	"boot": {
+		"kernel": "http://stable.release.core-os.net/amd64-usr/1632.2.1/coreos_production_pxe.vmlinuz",
+		"initrd": [
+			"http://stable.release.core-os.net/amd64-usr/1632.2.1/coreos_production_pxe_image.cpio.gz"
+		],
+		"args": [
+			"initrd=coreos_production_pxe_image.cpio.gz",
+			"coreos.config.url=http://matchbox.home.es.tnv:8080/ignition?uuid=${uuid}\u0026mac=${mac:hexhyp}",
+			"coreos.first_boot=yes",
+			"console=tty0",
+			"console=ttyS0",
+			"kvm-intel.nested=1"
+		]
+	}
+}

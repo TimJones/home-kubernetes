@@ -1,8 +1,12 @@
 {
 	"id": "node-03",
-	"profile": "container-linux-install",
+	"profile": "kubernetes",
 	"selector": {
-		"mac": "02:00:c6:3b:b2:bd"
+		"mac": "02:00:c6:3b:b2:bd",
+		"os": "installed"
 	},
-	"metadata": {}
+	"metadata": {
+		"node_name": "node-03",
+		"node_domain": "home.es.tnv"
+	}
 }

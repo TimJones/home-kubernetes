@@ -1,0 +1,13 @@
+---
+storage:
+  files:
+    - path: /etc/hostname
+      filesystem: root
+      mode: 0644
+      contents:
+        inline: |
+          {{ .node_name }}
+ignition:
+  config:
+    append:
+      - source: http://matchbox.home.es.tnv:8080/ignition?profile=ssh-auth

@@ -1,0 +1,5 @@
+{
+	"id": "boot-install",
+	"profile": "container-linux-install",
+	"metadata": {}
+}
