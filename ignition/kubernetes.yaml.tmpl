@@ -1,3 +1,4 @@
+{{ define "fqdn_name" }}{{ printf "%s.%s" .node_name .node_domain }}{{ end }}
 ---
 storage:
   files:
@@ -13,6 +14,22 @@ systemd:
       enable: true
     - name: locksmithd.service
       mask: true
+{{ if index . "node_type" }}{{ if eq .node_type "controller" }}
+    - name: etcd-member.service
+      enable: true
+      dropins:
+        - name: 40-etcd-cluster.conf
+          contents: |
+            [Service]
+            Environment="ETCD_IMAGE_TAG=v3.2.15"
+            Environment="ETCD_NAME={{ .node_name }}"
+            Environment="ETCD_ADVERTISE_CLIENT_URLS=http://{{ template "fqdn_name" . }}:2379"
+            Environment="ETCD_INITIAL_ADVERTISE_PEER_URLS=http://{{ template "fqdn_name" . }}:2380"
+            Environment="ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379"
+            Environment="ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380"
+            Environment="ETCD_INITIAL_CLUSTER={{ .etcd_initial_cluster }}"
+            Environment="ETCD_STRICT_RECONFIG_CHECK=true"
+{{ end }}{{ end }}
 ignition:
   config:
     append:

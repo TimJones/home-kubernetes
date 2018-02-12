@@ -6,6 +6,7 @@
 		"os": "installed"
 	},
 	"metadata": {
+		"node_type": "worker",
 		"node_name": "node-03",
 		"node_domain": "home.es.tnv"
 	}

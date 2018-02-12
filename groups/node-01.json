@@ -6,7 +6,9 @@
 		"os": "installed"
 	},
 	"metadata": {
+		"node_type": "controller",
 		"node_name": "node-01",
-		"node_domain": "home.es.tnv"
+		"node_domain": "home.es.tnv",
+		"etcd_initial_cluster": "node-01=http://node-01.home.es.tnv:2380"
 	}
 }
