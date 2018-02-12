@@ -11,6 +11,8 @@ systemd:
   units:
     - name: docker.service
       enable: true
+    - name: locksmithd.service
+      mask: true
 ignition:
   config:
     append:
