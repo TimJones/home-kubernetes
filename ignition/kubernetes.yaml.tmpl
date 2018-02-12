@@ -7,6 +7,10 @@ storage:
       contents:
         inline: |
           {{ .node_name }}
+systemd:
+  units:
+    - name: docker.service
+      enable: true
 ignition:
   config:
     append:
