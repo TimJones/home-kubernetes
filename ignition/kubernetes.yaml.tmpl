@@ -8,12 +8,51 @@ storage:
       contents:
         inline: |
           {{ .node_name }}
+    - path: /etc/install-cni.env
+      filesystem: root
+      mode: 0644
+      contents:
+        inline: |
+          CNI_VERSION=v0.6.0
+    - path: /opt/bin/get-cni-plugins
+      filesystem: root
+      mode: 0544
+      contents:
+        inline: |
+          #!/bin/bash
+          # Wrapper to download & install CNI plugins
+          set -e
+          [ -z "${CNI_VERSION}" ] && echo "CNI_VERSION must be set before running this script" && exit 1
+          mkdir -p /opt/cni/bin
+          [ "$(cat /opt/cni/version 2>/dev/null)" = "${CNI_VERSION}" ] && echo "CNI plugins already at version ${CNI_VERSION}" && exit 0
+          curl -L "https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-amd64-${CNI_VERSION}.tgz" | tar -C /opt/cni/bin -xz
+          echo "${CNI_VERSION}" > /opt/cni/version
 systemd:
   units:
     - name: docker.service
       enable: true
     - name: locksmithd.service
       mask: true
+    - name: install-cni.path
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Watch for CNI plugin changes
+        [Path]
+        PathModified=/etc/cni.env
+        [Install]
+        WantedBy=multi-user.target
+    - name: install-cni.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Download CNI plugins as needed
+        [Service]
+        Type=oneshot
+        EnvironmentFile=/etc/install-cni.env
+        ExecStart=/opt/bin/get-cni-plugins
+        [Install]
+        WantedBy=multi-user.target
 {{ if index . "node_type" }}{{ if eq .node_type "controller" }}
     - name: etcd-member.service
       enable: true
