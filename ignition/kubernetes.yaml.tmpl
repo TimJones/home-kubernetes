@@ -27,6 +27,26 @@ storage:
           [ "$(cat /opt/cni/version 2>/dev/null)" = "${CNI_VERSION}" ] && echo "CNI plugins already at version ${CNI_VERSION}" && exit 0
           curl -L "https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-amd64-${CNI_VERSION}.tgz" | tar -C /opt/cni/bin -xz
           echo "${CNI_VERSION}" > /opt/cni/version
+    - path: /etc/install-kubetools.env
+      filesystem: root
+      mode: 0644
+      contents:
+        inline: |
+          KUBETOOLS_VERSION=v1.9.3
+    - path: /opt/bin/get-kubetools
+      filesystem: root
+      mode: 0544
+      contents:
+        inline: |
+          #!/bin/bash
+          # Wrapper to download & install kubeadm, kubelet, & kubectl
+          set -e
+          [ -z "${KUBETOOLS_VERSION}" ] && echo "KUBETOOLS_VERSION must be set before running this script" && exit 1
+          mkdir -p /opt/bin /opt/kubetools
+          [ "$(cat /opt/kubetools/version 2>/dev/null)" = "${KUBETOOLS_VERSION}" ] && echo "Kubetools plugins already at version ${KUBETOOLS_VERSION}" && exit 0
+          curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBETOOLS_VERSION}/bin/linux/amd64/'{kubeadm,kubelet,kubectl}' -o /opt/bin/#1
+          chmod +x /opt/bin/{kubeadm,kubelet,kubectl}
+          echo "${KUBETOOLS_VERSION}" > /opt/kubetools/version
 systemd:
   units:
     - name: docker.service
@@ -51,6 +71,26 @@ systemd:
         Type=oneshot
         EnvironmentFile=/etc/install-cni.env
         ExecStart=/opt/bin/get-cni-plugins
+        [Install]
+        WantedBy=multi-user.target
+    - name: install-cni.path
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Watch for Kubetools (kubeadm, kubelet, kubectl) changes
+        [Path]
+        PathModified=/etc/kubetools.env
+        [Install]
+        WantedBy=multi-user.target
+    - name: install-kubetools.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Download Kubetools (kubeadm, kubectl, kubelet) as needed
+        [Service]
+        Type=oneshot
+        EnvironmentFile=/etc/install-kubetools.env
+        ExecStart=/opt/bin/get-kubetools
         [Install]
         WantedBy=multi-user.target
 {{ if index . "node_type" }}{{ if eq .node_type "controller" }}
