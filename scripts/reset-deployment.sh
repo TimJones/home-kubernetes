@@ -1,11 +1,28 @@
 #!/bin/bash
 
-if [ -f "terraform.tfstate" ]; then
-  for resource in bootkube-start copy-etcd-secrets copy-kubeconfig.0 copy-kubeconfig.1; do
-    terraform taint -module cluster null_resource.${resource}
-  done
+if [ $# -eq 0 ]; then
+  cat <<EOU
+Kubernetes deploymnet resetter
+Usage: $(basename "$0") cluster
 
-  ${0%/*}/reset-nodes.sh node-{01..03}.home.es.tnv
+cluster:  Name of Kubernetes cluster to reset, nodes must be reachable by SSH
 
-  terraform apply -auto-approve
+Example:
+$(basename "$0") home
+EOU
+  exit 1
 fi
+
+cluster="${1}"
+
+terraform plan
+
+for resource in $(terraform show -no-color | awk -F'\\.|:' -v regex='module.'"${cluster}"'.null_resource.(bootkube-start|copy-etcd-secrets|copy-kubeconfig)' '$0 ~ regex { print NF == 6 ? $4 "." $5 : $4 }'); do
+  terraform taint -module ${cluster} null_resource.${resource}
+done
+
+for node in $(terraform show -no-color | awk '$1 == "vars.domain_name" { print $3 }'); do
+  ${0%/*}/reset-nodes.sh ${node}
+done
+
+terraform apply -auto-approve
