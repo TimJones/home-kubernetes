@@ -21,15 +21,15 @@ module "cluster" {
 
   # machines
   controller_names   = ["node-01"]
-  controller_macs    = ["02:00:0d:84:1f:93"]
+  controller_macs    = ["02:00:c6:3b:b2:bb"]
   controller_domains = ["node-01.home.es.tnv"]
   worker_names = [
     "node-02",
     "node-03",
   ]
   worker_macs = [
-    "02:00:0d:84:1f:94",
-    "02:00:0d:84:1f:8e",
+    "02:00:c6:3b:b2:bc",
+    "02:00:c6:3b:b2:bd",
   ]
   worker_domains = [
     "node-02.home.es.tnv",
