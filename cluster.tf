@@ -1,5 +1,5 @@
 // Self-hosted Kubernetes cluster
-module "cluster" {
+module "home-cluster" {
   source = "git::https://github.com/poseidon/typhoon//bare-metal/container-linux/kubernetes?ref=v1.9.2"
 
   providers = {
