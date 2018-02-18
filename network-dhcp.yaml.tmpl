@@ -1,0 +1,19 @@
+units:
+  - name: 01-admin.network
+    contents: |
+      [Match]
+      MACAddress={{ .mac }}
+      [Network]
+      DHCP=yes
+  - name: 02-non-admin.network
+    contents: |
+      [Match]
+      Name=*
+      [Network]
+      DHCP=yes
+      [DHCP]
+      UseDNS=false
+      UseDomains=false
+      UseRoutes=false
+      UseHostname=false
+      SendHostname=false

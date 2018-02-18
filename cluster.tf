@@ -47,4 +47,11 @@ module "cluster" {
   kernel_args = [
     "kvm-intel.nested=1",
   ]
+
+  # custom... may break
+  controller_networkds = [ "${file("network.yaml.tmpl")}" ]
+  worker_networkds = [
+    "${file("network.yaml.tmpl")}",
+    "${file("network.yaml.tmpl")}",
+  ]
 }
