@@ -1,0 +1,6 @@
+charts:
+  - name: heapster
+    namespace: kube-system
+    chart: stable/heapster
+    set:
+      tag: v1.5.1
