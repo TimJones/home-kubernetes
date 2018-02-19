@@ -30,7 +30,7 @@ if ! mountpoint -q "${drive_dir}"; then
   exit 2
 fi
 
-rsync -aqr ${PWD}/ ${dest}/ --delete
+rsync -aqr ${PWD}/ ${dest}/
 
 if [  $# -gt 0 ]; then
   pushd ${dest}
