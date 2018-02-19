@@ -20,13 +20,14 @@ dest=$1; shift
 # to Docker-for-Windows, so needs to be a direct drive mount
 drive_dir="${dest}"
 while [ "$(dirname "${drive_dir}")" != "/" ]; do
-drive_dir="$(dirname "${drive_dir}")"
+  drive_dir="$(dirname "${drive_dir}")"
 done
+
 if ! mountpoint -q "${drive_dir}"; then
-echo "ERR: No mountpoint at '${drive_dir}' found"
-echo "Docker for Windows exports entire drives and mounts them at '/<drive-letter>'"
-echo "You probably need to run something like 'sudo mount --bind /mnt${drive_dir} ${drive_dir}'"
-exit 2
+  echo "ERR: No mountpoint at '${drive_dir}' found"
+  echo "Docker for Windows exports entire drives and mounts them at '/<drive-letter>'"
+  echo "You probably need to run something like 'sudo mount --bind /mnt${drive_dir} ${drive_dir}'"
+  exit 2
 fi
 
 rsync -aqr ${PWD}/ ${dest}/ --delete
