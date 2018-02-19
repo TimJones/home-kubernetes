@@ -1,6 +1,13 @@
+repositories:
+  - name: coreos
+    url: https://s3-eu-west-1.amazonaws.com/coreos-charts/stable/
+
 charts:
   - name: heapster
     namespace: kube-system
     chart: stable/heapster
     set:
       tag: v1.5.1
+  - name: prometheus-operator
+    namespace: monitoring
+    chart: coreos/prometheus-operator
